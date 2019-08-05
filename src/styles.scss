@@ -1,0 +1,20 @@
+.table th { border-top: none; }
+
+.dark-theme {
+  background-color: #36393f;
+  color: #cfd0d1;
+}
+
+@media (min-width: 1700px) {
+  .container-fluid {
+    padding-left: 4%;
+    padding-right: 4%;
+  }
+}
+
+@media (min-width: 1800px) {
+  .container-fluid {
+    padding-left: 7%;
+    padding-right: 7%;
+  }
+}

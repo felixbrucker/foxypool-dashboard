@@ -1,0 +1,31 @@
+<div style="display: flex;flex-direction: row;justify-content: space-between;">
+  <div style="display: flex;">
+    <div ngbDropdown class="d-inline-block" style="margin-left: 10px;">
+      <button class="btn btn-outline-primary" id="poolsDropdown" ngbDropdownToggle>
+        {{selectedPool ? selectedPool.name : 'Select a Pool'}}
+      </button>
+      <div ngbDropdownMenu aria-labelledby="poolsDropdown">
+        <div *ngFor="let pool of availablePools; let i = index" [attr.data-index]="i">
+          <h6 *ngIf="!getPool(i - 1) || getPool(i - 1).group !== pool.group" class="dropdown-header">{{pool.group}}</h6>
+          <div ngbDropdownItem (click)="selectPool(pool)">{{pool.name}}</div>
+          <div *ngIf="getPool(i + 1) && getPool(i + 1).group !== pool.group" class="dropdown-divider"></div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!!selectedPool" style="width: 20em; margin-left: 10px">
+      <input class="form-control" type="text" placeholder="Payout Address" [(ngModel)]="selectedPool.payoutAddress">
+    </div>
+    <button class="btn btn-outline-primary" style="margin-left: 10px" *ngIf="selectedPool" [disabled]="!selectedPool.payoutAddress" (click)="addPool()">
+      Add Pool
+    </button>
+  </div>
+  <div style="display: flex;">
+    <input type="text" class="form-control" placeholder="peer id" [(ngModel)]="peerId" style="width: 12em;background-color: #2f3136;color: #cfd0d1;">
+    <button class="btn btn-outline-primary" style="margin-left: 10px; width: 8em" *ngIf="peerId" (click)="importConfig()">
+      Import config
+    </button>
+    <button class="btn btn-outline-primary" style="margin-left: 10px; width: 8em" *ngIf="!peerId" (click)="exportConfig()">
+      Export config
+    </button>
+  </div>
+</div>

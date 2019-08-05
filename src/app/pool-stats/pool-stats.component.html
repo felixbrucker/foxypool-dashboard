@@ -1,0 +1,92 @@
+<div style="display: flex;flex-direction: row;justify-content: space-between;">
+  <h5>Miners</h5>
+</div>
+<table class="table table-dark dark-theme">
+  <thead>
+  <tr>
+    <th scope="col">Pool</th>
+    <th scope="col">Address</th>
+    <th scope="col"><span (click)="toggleSorting('pending')">Pending <fa-icon *ngIf="isSortedColumn('pending')"
+                                                                              [icon]="sortingIcon"
+                                                                              style="color: #cfd0d1;"></fa-icon></span>
+    </th>
+    <th scope="col">
+      <span (click)="toggleSorting('historicalShare')" ngbTooltip="Historical share">Share <fa-icon
+        *ngIf="isSortedColumn('historicalShare')" [icon]="sortingIcon" style="color: #cfd0d1;"></fa-icon></span>
+    </th>
+    <th scope="col"><span (click)="toggleSorting('pledge')">Pledged <fa-icon
+      *ngIf="isSortedColumn('pledge')" [icon]="sortingIcon" style="color: #cfd0d1;"></fa-icon></span></th>
+    <th scope="col"><span (click)="toggleSorting('historicalPledgeShare')">Pledge Share <fa-icon
+      *ngIf="isSortedColumn('historicalPledgeShare')" [icon]="sortingIcon" style="color: #cfd0d1;"></fa-icon></span>
+    </th>
+    <th scope="col"><span (click)="toggleSorting('deadlineCount')">Deadlines <fa-icon
+      *ngIf="isSortedColumn('deadlineCount')" [icon]="sortingIcon" style="color: #cfd0d1;"></fa-icon></span></th>
+    <th scope="col"><span (click)="toggleSorting('ec')" ngbTooltip="Effective capacity">EC <fa-icon
+      *ngIf="isSortedColumn('ec')" [icon]="sortingIcon" style="color: #cfd0d1;"></fa-icon></span></th>
+    <th scope="col"><span (click)="toggleSorting('reportedCapacity')" ngbTooltip="Reported capacity">Capacity <fa-icon
+      *ngIf="isSortedColumn('reportedCapacity')" [icon]="sortingIcon" style="color: #cfd0d1;"></fa-icon></span></th>
+    <th scope="col">Last Payout / Miner</th>
+    <th scope="col">Remove</th>
+  </tr>
+  </thead>
+  <tbody *ngFor="let pool of pools">
+    <tr *ngFor="let miner of getSortedMiners(pool)">
+      <td><a href="{{pool.url}}" target="_blank">{{pool.name}}</a></td>
+      <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)">
+        <span class="dot" *ngIf="!isMinerCheating(pool, miner)" ngbTooltip="{{getMinerOnlineTooltip(miner.online)}}"
+              [attr.positive]="miner.online === 1 ? true : null"
+              [attr.intermediary]="miner.online === 2 ? true : null"
+              [attr.investor]="miner.online === 3 ? true : null"
+              [attr.negative]="miner.online === 0 ? true : null">
+        </span>
+        <span *ngIf="isMinerCheating(pool, miner)" ngbTooltip="Cheater">
+          <fa-icon [icon]="faExclamationTriangle" style="color: orange;"></fa-icon>
+        </span>
+        {{miner.accountName || miner.payoutAddress}}
+        <span *ngIf="shouldShowDetails(pool.name, miner.payoutAddress)">
+          <span *ngFor="let machine of miner.machines">
+            <br>
+            &nbsp;<span class="dot" ngbTooltip="{{getMinerOnlineTooltip(getMachineState(pool, machine))}}"
+                      [attr.positive]="getMachineState(pool, machine) === 1 ? true : null"
+                      [attr.intermediary]="getMachineState(pool, machine) === 2 ? true : null"
+                      [attr.negative]="getMachineState(pool, machine) === 0 ? true : null">
+            </span>
+            {{getMachineName(machine)}}: {{getFormattedCapacity(machine.reportedCapacity)}}
+          </span>
+        </span>
+      </td>
+      <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)">{{miner.pending.toFixed(8)}} {{pool.poolConfig.symbol}}</td>
+      <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)">{{(miner.historicalShare * 100).toFixed(4)}}%</td>
+      <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)" *ngIf="pool.poolConfig.supportsPledge">{{miner.pledge.toFixed(2)}} {{pool.poolConfig.symbol}}</td>
+      <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)" *ngIf="!pool.poolConfig.supportsPledge">N/A</td>
+      <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)" *ngIf="pool.poolConfig.supportsPledge">{{(miner.historicalPledgeShare * 100).toFixed(4)}} %</td>
+      <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)" *ngIf="!pool.poolConfig.supportsPledge">N/A</td>
+      <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)">{{miner.deadlineCount}}</td>
+      <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)">{{getFormattedCapacity(miner.ec * 1024)}}</td>
+      <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)">{{getFormattedCapacityForMiner(miner)}}</td>
+      <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)">
+        <span *ngIf="!!getLastPayout(pool, miner.payoutAddress)">
+          <span *ngIf="pool.poolConfig.blockExplorerTxUrlTemplate">
+            <a href="{{getBlockExplorerTransactionLink(pool, getLasPayoutTxId(pool, miner.payoutAddress))}}" target="_blank">{{getLasPayoutDate(pool, miner.payoutAddress)}}</a>
+          </span>
+          <span *ngIf="!pool.poolConfig.blockExplorerTxUrlTemplate">
+            {{getLasPayoutDate(pool, miner.payoutAddress)}}
+          </span>
+          ({{getLasPayoutAmount(pool, miner.payoutAddress)}} {{pool.poolConfig.symbol}})
+        </span>
+        <span *ngIf="!getLastPayout(pool, miner.payoutAddress)">
+          N/A
+        </span>
+        <span *ngIf="shouldShowDetails(pool.name, miner.payoutAddress)">
+          <br>
+          {{miner.minerSoftware || 'N/A'}}
+        </span>
+      </td>
+      <td>
+        <button class="btn btn-outline-danger" (click)="removeMiner(pool, miner.payoutAddress)">
+          <fa-icon [icon]="trash"></fa-icon>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -45,7 +45,7 @@
     "@angular/cli": "^8.1.1",
     "@angular/compiler-cli": "^8.1.1",
     "@angular/language-service": "^8.1.1",
-    "@babel/cli": "^7.5.0",
+    "@babel/cli": "^7.6.4",
     "@babel/core": "^7.5.4",
     "@babel/preset-env": "^7.5.4",
     "@types/echarts": "^4.1.9",

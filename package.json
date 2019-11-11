@@ -33,7 +33,7 @@
     "fuse.js": "^3.4.5",
     "humanize-duration": "^3.19.0",
     "moment": "^2.24.0",
-    "ngx-echarts": "^4.2.1",
+    "ngx-echarts": "^4.2.2",
     "peerjs": "^1.1.0",
     "rxjs": "^6.5.2",
     "socket.io-client": "^2.2.0",

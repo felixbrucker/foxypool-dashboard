@@ -47,10 +47,6 @@ export class PoolsService {
       name: 'Foxy-Pool HDD',
       url: 'https://hdd.foxypool.cf',
     },{
-      group: 'HDD',
-      name: 'Foxy-Pool HDD Pledged',
-      url: 'https://hdd-pledged.foxypool.cf',
-    },{
       group: 'LAVA',
       name: 'Foxy-Pool LAVA',
       url: 'https://lava.foxypool.cf',

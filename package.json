@@ -30,7 +30,7 @@
     "bootstrap": "^4.4.1",
     "core-js": "^3.1.4",
     "echarts": "^4.5.0",
-    "fuse.js": "^3.4.5",
+    "fuse.js": "^3.4.6",
     "humanize-duration": "^3.19.0",
     "moment": "^2.24.0",
     "ngx-echarts": "^4.2.1",

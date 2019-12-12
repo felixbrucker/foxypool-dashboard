@@ -23,10 +23,6 @@ export class PoolsService {
       name: 'Foxy-Pool BOOM',
       url: 'https://boom.foxypool.cf',
     },{
-      group: 'BOOM',
-      name: 'BOOMbastic-1',
-      url: 'https://boombastic-1.foxypool.cf',
-    },{
       group: 'BTB',
       name: 'Foxy-Pool BTB',
       url: 'https://btb.foxypool.cf',

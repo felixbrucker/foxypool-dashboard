@@ -51,10 +51,6 @@ export class PoolsService {
       name: 'Foxy-Pool LHD',
       url: 'https://lhd.foxypool.cf',
     },{
-      group: 'LHD',
-      name: 'Long Hard Deck',
-      url: 'https://long-hard-deck.foxypool.cf',
-    },{
       group: 'XHD',
       name: 'Foxy-Pool XHD',
       url: 'https://xhd.foxypool.cf:8443',

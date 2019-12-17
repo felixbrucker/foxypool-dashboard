@@ -53,11 +53,7 @@ export class PoolsService {
     },{
       group: 'XHD',
       name: 'Foxy-Pool XHD',
-      url: 'https://xhd.foxypool.cf:8443',
-    },{
-      group: 'XHD',
-      name: 'Foxy-Pool XHD Pledged',
-      url: 'https://xhd-pledged.foxypool.cf',
+      url: 'https://xhd.foxypool.cf',
     },
   ];
 

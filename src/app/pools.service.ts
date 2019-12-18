@@ -27,10 +27,6 @@ export class PoolsService {
       name: 'Foxy-Pool BTB',
       url: 'https://btb.foxypool.cf',
     },{
-      group: 'BTB',
-      name: 'Foxy-Pool BTB Pledged',
-      url: 'https://btb-pledged.foxypool.cf',
-    },{
       group: 'BURST',
       name: 'Foxy-Pool BURST',
       url:  'https://burst.foxypool.cf',

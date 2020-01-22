@@ -12,6 +12,8 @@ import {NgxEchartsModule} from 'ngx-echarts';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { AddNewPoolComponent } from './add-new-pool/add-new-pool.component';
 import { PoolStatsComponent } from './pool-stats/pool-stats.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,7 @@ import { PoolStatsComponent } from './pool-stats/pool-stats.component';
     FormsModule,
     NgxEchartsModule,
     NgbModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production, registrationStrategy: 'registerImmediately' }),
   ],
   providers: [],
   bootstrap: [AppComponent]

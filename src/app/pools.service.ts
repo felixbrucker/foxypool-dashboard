@@ -19,10 +19,6 @@ export class PoolsService {
       name: 'Big Hard Deck',
       url: 'https://big-hard-deck.foxypool.cf',
     },{
-      group: 'BOOM',
-      name: 'Foxy-Pool BOOM',
-      url: 'https://boom.foxypool.cf',
-    },{
       group: 'BTB',
       name: 'Foxy-Pool BTB',
       url: 'https://btb.foxypool.cf',

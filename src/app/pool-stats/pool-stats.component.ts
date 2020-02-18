@@ -29,7 +29,17 @@ export class PoolStatsComponent implements OnInit {
 
   getMiners(pool) {
     if (!pool.poolStats.miners) {
-      return [];
+      return pool.payoutAddresses.map(payoutAddress => ({
+        payoutAddress,
+        machines: [],
+        reportedCapacity: 0,
+        pending: 0,
+        historicalShare: 0,
+        pledge: 0,
+        historicalPledgeShare: 0,
+        deadlineCount: 'N/A',
+        ec: 0,
+      }));
     }
 
     const miners = pool.poolStats.miners.filter(miner => pool.payoutAddresses.some(payoutAddress => payoutAddress === miner.payoutAddress));
@@ -64,6 +74,9 @@ export class PoolStatsComponent implements OnInit {
   }
 
   getLastPayout(pool, payoutAddress) {
+    if (!pool.poolStats.payouts) {
+      return null;
+    }
     return pool.poolStats.payouts.find(payout => Object.keys(payout.addressAmountPairs).some(currentPayoutAddress => currentPayoutAddress === payoutAddress));
   }
 

@@ -1,38 +1,50 @@
 import { Injectable } from '@angular/core';
-// @ts-ignore
-import Peer from 'peerjs';
+import { generate as generateShortId } from 'shortid';
+import { connectAsync } from '../../lib/browser-async-mqtt';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SharingService {
+  private mqttServer = 'wss://test.mosquitto.org:8081';
 
   constructor() {}
 
   async shareData(data) {
-    const peer = new Peer();
-    peer.on('connection', async (conn) => {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      conn.send(data);
-    });
+    const client = await connectAsync(this.mqttServer);
+    const topic = generateShortId();
+    await client.subscribe(topic);
+    const clientClosedPromise = new Promise((resolve => {
+      client.on('message', async (topic, buf) => {
+        const msg = buf.toString();
+        if (msg !== 'send') {
+          return;
+        }
+        await client.publish(topic, JSON.stringify(data));
+        await client.end();
+        resolve();
+      });
+    }));
 
-    await new Promise(resolve => peer.on('open', resolve));
-
-    return peer.id;
+    return {topic, clientClosedPromise};
   }
 
-  async getData(peerId) {
-    const peer = new Peer();
-    const conn = peer.connect(peerId);
-    const data = await new Promise(resolve => {
-      conn.on('open', () => {
-        conn.on('data', (data) => {
-          resolve(data);
-        });
+  async getData(topic) {
+    const client = await connectAsync(this.mqttServer);
+    await client.subscribe(topic);
+    const dataPromise = new Promise((resolve) => {
+      client.on('message', async (topic, buf) => {
+        const msg = buf.toString();
+        if (msg === 'send') {
+          return;
+        }
+        await client.end();
+        resolve(JSON.parse(msg));
       });
     });
-    peer.destroy();
 
-    return data;
+    await client.publish(topic, 'send');
+
+    return dataPromise;
   }
 }

@@ -12,7 +12,7 @@ import {LocalStorageService} from "../local-storage.service";
 export class AddNewPoolComponent implements OnInit {
 
   public selectedPool = null;
-  private _peerId;
+  private _topic;
 
   constructor(
     private poolsService: PoolsService,
@@ -62,20 +62,24 @@ export class AddNewPoolComponent implements OnInit {
   }
 
   async importConfig() {
-    const pools: any = await this.sharingService.getData(this.peerId);
+    const pools: any = await this.sharingService.getData(this.topic);
     this.localStorageService.setItem('configuredPools', JSON.stringify(pools));
     this.poolsService.init();
+    this.topic = null;
   }
 
   async exportConfig() {
-    this.peerId = await this.sharingService.shareData(this.poolsService.poolsAsJSON);
+    const {topic, clientClosedPromise} = await this.sharingService.shareData(this.poolsService.poolsAsJSON);
+    this.topic = topic;
+    await clientClosedPromise;
+    this.topic = null
   }
 
-  get peerId() {
-    return this._peerId;
+  get topic() {
+    return this._topic;
   }
 
-  set peerId(value) {
-    this._peerId = value;
+  set topic(value) {
+    this._topic = value;
   }
 }

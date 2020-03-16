@@ -11,6 +11,10 @@ export class PoolsService {
 
   public readonly _availablePools = [
     {
+      group: 'AETH',
+      name: 'Foxy-Pool AETH',
+      url: 'https://aeth.foxypool.cf',
+    },{
       group: 'BHD',
       name: 'Foxy-Pool BHD',
       url: 'https://bhd.foxypool.cf',

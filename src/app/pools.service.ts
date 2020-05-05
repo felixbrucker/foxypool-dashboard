@@ -20,8 +20,8 @@ export class PoolsService {
       url: 'https://bhd.foxypool.cf',
     },{
       group: 'BHD',
-      name: 'Big Hard Deck',
-      url: 'https://big-hard-deck.foxypool.cf',
+      name: 'Foxy-Pool BHD ECO',
+      url: 'https://bhd-eco.foxypool.cf',
     },{
       group: 'BTB',
       name: 'Foxy-Pool BTB',

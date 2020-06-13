@@ -11,22 +11,14 @@ export class PoolsService {
 
   public readonly _availablePools = [
     {
-      group: 'AETH',
-      name: 'Foxy-Pool AETH',
-      url: 'https://aeth.foxypool.cf',
-    },{
       group: 'BHD',
       name: 'Foxy-Pool BHD',
       url: 'https://bhd.foxypool.cf',
     },{
-      group: 'BHD',
-      name: 'Foxy-Pool BHD ECO',
-      url: 'https://bhd-eco.foxypool.cf',
-    },{
-      group: 'BTB',
-      name: 'Foxy-Pool BTB',
-      url: 'https://btb.foxypool.cf',
-    },{
+    //   group: 'BHD',
+    //   name: 'Foxy-Pool BHD ECO',
+    //   url: 'https://bhd-eco.foxypool.cf',
+    // },{
       group: 'BURST',
       name: 'Foxy-Pool BURST',
       url:  'https://burst.foxypool.cf',

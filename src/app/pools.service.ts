@@ -15,10 +15,10 @@ export class PoolsService {
       name: 'Foxy-Pool BHD',
       url: 'https://bhd.foxypool.cf',
     },{
-    //   group: 'BHD',
-    //   name: 'Foxy-Pool BHD ECO',
-    //   url: 'https://bhd-eco.foxypool.cf',
-    // },{
+      group: 'BHD',
+      name: 'Foxy-Pool BHD ECO',
+      url: 'https://bhd-eco.foxypool.cf',
+    },{
       group: 'BURST',
       name: 'Foxy-Pool BURST',
       url:  'https://burst.foxypool.cf',

@@ -33,14 +33,20 @@
     <tr *ngFor="let miner of getSortedMiners(pool)">
       <td><a href="{{pool.url}}" target="_blank">{{pool.name}}</a></td>
       <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)">
+        <span *ngIf="isMinerCheating(pool, miner)" ngbTooltip="Cheater">
+          <fa-icon [icon]="faExclamationTriangle" style="color: orange;"></fa-icon>
+        </span>
+        <span *ngIf="miner.ec > 0 && miner.isDeprecatedEndpoint" style="padding-right: 4px" ngbTooltip="You are using a deprecated mining url!">
+          <fa-icon [icon]="faExclamationTriangle" style="color: orangered;"></fa-icon>
+        </span>
+        <span *ngIf="miner.ec > 0 && !miner.isDeprecatedEndpoint && miner.connection === 'http'" style="padding-right: 4px" ngbTooltip="You are using http polling which hurts the pools performance, consider using Foxy-Miner or Foxy-Proxy">
+          <fa-icon [icon]="faExclamationTriangle" style="color: orange;"></fa-icon>
+        </span>
         <span class="dot" *ngIf="!isMinerCheating(pool, miner)" ngbTooltip="{{getMinerOnlineTooltip(miner.online)}}"
               [attr.positive]="miner.online === 1 ? true : null"
               [attr.intermediary]="miner.online === 2 ? true : null"
               [attr.investor]="miner.online === 3 ? true : null"
               [attr.negative]="miner.online === 0 ? true : null">
-        </span>
-        <span *ngIf="isMinerCheating(pool, miner)" ngbTooltip="Cheater">
-          <fa-icon [icon]="faExclamationTriangle" style="color: orange;"></fa-icon>
         </span>
         {{miner.accountName || miner.payoutAddress}}
         <span *ngIf="shouldShowDetails(pool.name, miner.payoutAddress)">

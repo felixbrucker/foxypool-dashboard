@@ -23,10 +23,6 @@ export class PoolsService {
       name: 'Foxy-Pool BURST',
       url:  'https://burst.foxypool.cf',
     },{
-      group: 'DISC',
-      name: 'Foxy-Pool DISC',
-      url: 'https://disc.foxypool.cf',
-    },{
       group: 'HDD',
       name: 'Foxy-Pool HDD',
       url: 'https://hdd.foxypool.cf',

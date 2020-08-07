@@ -13,27 +13,27 @@ export class PoolsService {
     {
       group: 'BHD',
       name: 'Foxy-Pool BHD',
-      url: 'https://bhd.foxypool.cf',
+      url: 'https://bhd.foxypool.io',
     },{
       group: 'BHD',
       name: 'Foxy-Pool BHD ECO',
-      url: 'https://bhd-eco.foxypool.cf',
+      url: 'https://bhd-eco.foxypool.io',
     },{
       group: 'BURST',
       name: 'Foxy-Pool BURST',
-      url:  'https://burst.foxypool.cf',
+      url:  'https://burst.foxypool.io',
     },{
       group: 'HDD',
       name: 'Foxy-Pool HDD',
-      url: 'https://hdd.foxypool.cf',
+      url: 'https://hdd.foxypool.io',
     },{
       group: 'LHD',
       name: 'Foxy-Pool LHD',
-      url: 'https://lhd.foxypool.cf',
+      url: 'https://lhd.foxypool.io',
     },{
       group: 'XHD',
       name: 'Foxy-Pool XHD',
-      url: 'https://xhd.foxypool.cf',
+      url: 'https://xhd.foxypool.io',
     },
   ];
 

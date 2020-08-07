@@ -5,7 +5,7 @@ Foxy-Dashboard
 
 ## How to use
 
-- Open https://dashboard.foxypool.cf
+- Open https://dashboard.foxypool.io
 - Add your payout addresses for each Foxy-Pool you'd like to see.
 - Profit
 

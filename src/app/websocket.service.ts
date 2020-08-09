@@ -17,4 +17,8 @@ export class WebsocketService {
   publish(topic, ...args) {
     this.socket.emit(topic, ...args);
   }
+
+  close() {
+    this.socket.close();
+  }
 }

@@ -63,4 +63,8 @@ export class StatsService {
   onNewLiveStats(liveStats) {
     this.liveStats.next(liveStats);
   }
+
+  close() {
+    this.websocketService.close();
+  }
 }

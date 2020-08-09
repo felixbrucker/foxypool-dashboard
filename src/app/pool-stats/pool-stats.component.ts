@@ -3,6 +3,7 @@ import {faSortUp, faSortDown, faTrash, faExclamationTriangle} from '@fortawesome
 import * as Capacity from '../../shared/capacity.es5';
 import {PoolsService} from "../pools.service";
 import * as moment from "moment";
+import BigNumber from "bignumber.js";
 
 @Component({
   selector: 'app-pool-stats',
@@ -28,17 +29,36 @@ export class PoolStatsComponent implements OnInit {
   }
 
   getMiners(pool) {
+    if (pool.poolStats.accounts) {
+      const accounts = pool.poolStats.accounts.filter(account => pool.payoutAddresses.some(payoutAddress => payoutAddress === account.payoutAddress));
+      if (accounts.length === 0) {
+        return pool.payoutAddresses.map(payoutAddress => ({
+          payoutAddress,
+          miner: [],
+          reportedCapacity: 0,
+          pending: '0',
+          ec: 0,
+          ecShare: 0,
+          pledge: '0',
+          pledgeShare: 0,
+          deadlines: 'N/A',
+        }));
+      }
+
+      return accounts;
+    }
+
     if (!pool.poolStats.miners) {
       return pool.payoutAddresses.map(payoutAddress => ({
         payoutAddress,
-        machines: [],
+        miner: [],
         reportedCapacity: 0,
-        pending: 0,
-        historicalShare: 0,
-        pledge: 0,
-        historicalPledgeShare: 0,
-        deadlineCount: 'N/A',
+        pending: '0',
         ec: 0,
+        ecShare: 0,
+        pledge: '0',
+        pledgeShare: 0,
+        deadlines: 'N/A',
       }));
     }
 
@@ -47,14 +67,14 @@ export class PoolStatsComponent implements OnInit {
     if (miners.length === 0) {
       return pool.payoutAddresses.map(payoutAddress => ({
         payoutAddress,
-        machines: [],
+        miner: [],
         reportedCapacity: 0,
-        pending: 0,
-        historicalShare: 0,
-        pledge: 0,
-        historicalPledgeShare: 0,
-        deadlineCount: 'N/A',
+        pending: '0',
         ec: 0,
+        ecShare: 0,
+        pledge: '0',
+        pledgeShare: 0,
+        deadlines: 'N/A',
       }));
     }
 
@@ -77,17 +97,30 @@ export class PoolStatsComponent implements OnInit {
     if (!pool.poolStats.payouts) {
       return null;
     }
-    return pool.poolStats.payouts.find(payout => Object.keys(payout.addressAmountPairs).some(currentPayoutAddress => currentPayoutAddress === payoutAddress));
+    return pool.poolStats.payouts.find(payout => {
+      if (payout.transactions) {
+        return payout.transactions.some(transaction => {
+          return Object.keys(transaction.payoutAmounts).some(currentPayoutAddress => currentPayoutAddress === payoutAddress);
+        });
+      } else {
+        return Object.keys(payout.addressAmountPairs).some(currentPayoutAddress => currentPayoutAddress === payoutAddress);
+      }
+    });
   }
 
-  getLasPayoutDate(pool, payoutAddress) {
+  getLastPayoutDate(pool, payoutAddress) {
     const lastPayout = this.getLastPayout(pool, payoutAddress);
 
     return moment(lastPayout.createdAt).format('YYYY-MM-DD');
   }
 
-  getLasPayoutTxId(pool, payoutAddress) {
+  getLastPayoutTxId(pool, payoutAddress) {
     const lastPayout = this.getLastPayout(pool, payoutAddress);
+    if (lastPayout.transactions) {
+      return lastPayout.transactions.find(transaction => {
+        return Object.keys(transaction.payoutAmounts).some(currentPayoutAddress => currentPayoutAddress === payoutAddress);
+      }).txId;
+    }
 
     return lastPayout.txId;
   }
@@ -96,8 +129,13 @@ export class PoolStatsComponent implements OnInit {
     return pool.poolConfig.blockExplorerTxUrlTemplate.replace('#TX#', txId);
   }
 
-  getLasPayoutAmount(pool, payoutAddress) {
+  getLastPayoutAmount(pool, payoutAddress) {
     const lastPayout = this.getLastPayout(pool, payoutAddress);
+    if (lastPayout.transactions) {
+      return lastPayout.transactions.find(transaction => {
+        return Object.keys(transaction.payoutAmounts).some(currentPayoutAddress => currentPayoutAddress === payoutAddress);
+      }).payoutAmounts[payoutAddress];
+    }
 
     return lastPayout.addressAmountPairs[payoutAddress];
   }
@@ -176,6 +214,10 @@ export class PoolStatsComponent implements OnInit {
     return pool.poolConfig.pledgePrecision;
   }
 
+  getPledge(pool, miner) {
+    return (new BigNumber(miner.pledge || 0)).decimalPlaces(this.getPledgePrecision(pool)).toNumber();
+  }
+
   toggleShowDetails(pool, payoutAddress) {
     this.showDetails[`${pool}/${payoutAddress}`] = !this.showDetails[`${pool}/${payoutAddress}`];
   }
@@ -185,10 +227,11 @@ export class PoolStatsComponent implements OnInit {
   }
 
   getMachineState(pool, machine) {
-    if (pool.roundStats.round.height - machine.lastSubmitHeight > 6) {
+    const lastSubmissionHeight = machine.lastSubmissionHeight || machine.lastSubmitHeight;
+    if (pool.roundStats.round.height - lastSubmissionHeight > 6) {
       return 0;
     }
-    if (pool.roundStats.round.height - machine.lastSubmitHeight > 3) {
+    if (pool.roundStats.round.height - lastSubmissionHeight > 3) {
       return 2;
     }
 
@@ -196,7 +239,7 @@ export class PoolStatsComponent implements OnInit {
   }
 
   getMachineName(machine) {
-    let name = machine.minerName || 'Unknown';
+    let name = machine.name || machine.minerName || 'Unknown';
     if (name.length > 30) {
       name = name.substr(0, 30) + '..'
     }
@@ -226,5 +269,28 @@ export class PoolStatsComponent implements OnInit {
       case 3: return 'Investor';
       default: return 'Not found';
     }
+  }
+
+  getAccountState(pool, account) {
+    const lastSubmitHeight = account.lastSubmissionHeight;
+    if (!lastSubmitHeight) {
+      return account.pledgeShare > 0 ? 3 : 0;
+    }
+    if (pool.roundStats.round.height - lastSubmitHeight > 6) {
+      return 0;
+    }
+    if (pool.roundStats.round.height - lastSubmitHeight > 3) {
+      return 2;
+    }
+
+    return 1;
+  }
+
+  getPending(miner) {
+    if (typeof miner.pending === 'string') {
+      return miner.pending;
+    }
+
+    return miner.pending.toFixed(8);
   }
 }

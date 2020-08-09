@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {LocalStorageService} from "./local-storage.service";
 import {StatsService} from "./stats.service";
+import {StatsV2Service} from "./stats-v2.service";
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +9,7 @@ import {StatsService} from "./stats.service";
 export class PoolsService {
 
   private _pools;
+  private statsV2Service;
 
   public readonly _availablePools = [
     {
@@ -19,9 +21,19 @@ export class PoolsService {
       name: 'Foxy-Pool BHD ECO',
       url: 'https://bhd-eco.foxypool.io',
     },{
+      group: 'BHD',
+      name: 'Foxy-Pool BHD (Testnet)',
+      url:  'https://bhd-testnet.foxypool.io',
+      poolIdentifier: 'bhd-testnet',
+    },{
       group: 'BURST',
       name: 'Foxy-Pool BURST',
       url:  'https://burst.foxypool.io',
+    },{
+      group: 'BURST',
+      name: 'Foxy-Pool BURST (Testnet)',
+      url:  'https://burst-testnet.foxypool.io',
+      poolIdentifier: 'burst-testnet',
     },{
       group: 'HDD',
       name: 'Foxy-Pool HDD',
@@ -41,14 +53,15 @@ export class PoolsService {
     this.init();
   }
 
-  init() {
+  async init() {
     const configuredPoolsString = this.localStorageService.getItem('configuredPools');
-    if (!configuredPoolsString) {
-      this._pools = [];
-    } else {
-      this._pools = JSON.parse(configuredPoolsString);
+    let pools = [];
+    if (configuredPoolsString) {
+      pools = JSON.parse(configuredPoolsString);
     }
-    this._pools = this._pools.map(pool => {
+    let v1Pools = pools.filter(pool => !pool.poolIdentifier);
+    let v2Pools = pools.filter(pool => !!pool.poolIdentifier);
+    v1Pools = v1Pools.map(pool => {
       const statsService = new StatsService(pool.url);
 
       const configuredPool = {
@@ -60,6 +73,7 @@ export class PoolsService {
         poolStats: statsService.poolStatsSubject.getValue(),
         roundStats: statsService.roundStatsSubject.getValue(),
         liveStats: statsService.liveStatsSubject.getValue(),
+        statsService,
       };
       statsService.poolConfigSubject.asObservable().subscribe((poolConfig => configuredPool.poolConfig = poolConfig));
       statsService.poolStatsSubject.asObservable().subscribe((poolStats => configuredPool.poolStats = poolStats));
@@ -68,6 +82,34 @@ export class PoolsService {
 
       return configuredPool;
     });
+    if (v2Pools.length > 0) {
+      if (!this.statsV2Service) {
+        this.statsV2Service = new StatsV2Service();
+      }
+      const poolIdentifier = [...Array.from(new Set(v2Pools.map(pool => pool.poolIdentifier)))];
+      await this.statsV2Service.setPoolIdentifier(poolIdentifier);
+      v2Pools = v2Pools.map(pool => {
+        const configuredPool = {
+          url: pool.url,
+          name: pool.name,
+          group: pool.group,
+          payoutAddresses: pool.payoutAddresses,
+          poolIdentifier: pool.poolIdentifier,
+          poolConfig: this.statsV2Service.getPoolConfigSubject(pool.poolIdentifier).getValue(),
+          poolStats: this.statsV2Service.getPoolStatsSubject(pool.poolIdentifier).getValue(),
+          roundStats: this.statsV2Service.getRoundStatsSubject(pool.poolIdentifier).getValue(),
+          liveStats: this.statsV2Service.getLiveStatsSubject(pool.poolIdentifier).getValue(),
+        };
+        this.statsV2Service.getPoolConfigSubject(pool.poolIdentifier).asObservable().subscribe((poolConfig => configuredPool.poolConfig = poolConfig));
+        this.statsV2Service.getPoolStatsSubject(pool.poolIdentifier).asObservable().subscribe((poolStats => configuredPool.poolStats = poolStats));
+        this.statsV2Service.getRoundStatsSubject(pool.poolIdentifier).asObservable().subscribe((roundStats => configuredPool.roundStats = roundStats));
+        this.statsV2Service.getLiveStatsSubject(pool.poolIdentifier).asObservable().subscribe((liveStats => configuredPool.liveStats = liveStats));
+
+        return configuredPool;
+      });
+    }
+
+    this._pools = v1Pools.concat(v2Pools);
   }
 
   get pools() {
@@ -88,6 +130,7 @@ export class PoolsService {
       name: pool.name,
       group: pool.group,
       payoutAddresses: pool.payoutAddresses,
+      poolIdentifier: pool.poolIdentifier,
     }));
   }
 
@@ -95,9 +138,12 @@ export class PoolsService {
     const exists = this._pools.find(pool => pool.url === poolToAdd.url);
     if (exists) {
       exists.payoutAddresses.push(poolToAdd.payoutAddresses[0]);
+      this.persistPools();
     } else {
-      this._pools.push(poolToAdd);
-      this._pools.sort((a, b) => {
+      this._pools.filter(pool => !!pool.statsService).forEach(pool => pool.statsService.close());
+      const pools = this.poolsAsJSON;
+      pools.push(poolToAdd);
+      pools.sort((a, b) => {
         if (a.group < b.group) {
           return -1;
         }
@@ -112,9 +158,9 @@ export class PoolsService {
         }
         return 0;
       });
+      this.localStorageService.setItem('configuredPools', JSON.stringify(pools));
+      this.init();
     }
-
-    this.persistPools();
   }
 
   removeMiner(pool, payoutAddress) {

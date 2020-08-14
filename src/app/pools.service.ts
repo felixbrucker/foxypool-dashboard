@@ -29,6 +29,7 @@ export class PoolsService {
       group: 'BURST',
       name: 'Foxy-Pool BURST',
       url:  'https://burst.foxypool.io',
+      poolIdentifier: 'burst',
     },{
       group: 'BURST',
       name: 'Foxy-Pool BURST (Testnet)',
@@ -50,6 +51,7 @@ export class PoolsService {
   ];
 
   constructor(private localStorageService: LocalStorageService) {
+    this.migrateOldConfigs();
     this.init();
   }
 
@@ -110,6 +112,27 @@ export class PoolsService {
     }
 
     this._pools = v1Pools.concat(v2Pools);
+  }
+
+  migrateOldConfigs() {
+    const configuredPoolsString = this.localStorageService.getItem('configuredPools');
+    let pools = [];
+    if (configuredPoolsString) {
+      pools = JSON.parse(configuredPoolsString);
+    }
+    if (pools.length === 0) {
+      return;
+    }
+    pools.forEach(pool => {
+      if (pool.url.indexOf('foxypool.cf') !== -1) {
+        pool.url = pool.url.replace('.cf', '.io');
+      }
+      if (pool.url.indexOf('burst.foxypool.io') !== -1 && !pool.poolIdentifier) {
+        pool.url = 'https://burst.foxypool.io';
+        pool.poolIdentifier = 'burst';
+      }
+    });
+    this.localStorageService.setItem('configuredPools', JSON.stringify(pools));
   }
 
   get pools() {

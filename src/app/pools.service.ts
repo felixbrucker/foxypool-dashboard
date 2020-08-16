@@ -110,8 +110,9 @@ export class PoolsService {
         return configuredPool;
       });
     }
-
-    this._pools = v1Pools.concat(v2Pools);
+    const allPools = v1Pools.concat(v2Pools);
+    this.sortPools(allPools);
+    this._pools = allPools;
   }
 
   migrateOldConfigs() {

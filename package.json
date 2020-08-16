@@ -6,12 +6,10 @@
     "start": "ng serve --watch",
     "start-no-proxy": "ng serve --watch --disable-host-check",
     "build": "ng build --optimization=true --prod=true --sourceMap=false",
-    "build:lib": "browserify node_modules/async-mqtt/index.js -s mqtt > lib/browser-async-mqtt.js",
     "build-dev": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "postinstall": "npm run build:lib"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
@@ -29,6 +27,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.26",
     "@fortawesome/free-solid-svg-icons": "^5.12.0",
     "@ng-bootstrap/ng-bootstrap": "^5.2.1",
+    "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
     "bignumber.js": "^9.0.0",
     "core-js": "^3.6.4",
@@ -36,8 +35,8 @@
     "fuse.js": "^3.4.6",
     "humanize-duration": "^3.21.0",
     "moment": "^2.24.0",
+    "mongoose": "^5.10.0",
     "ngx-echarts": "^4.2.2",
-    "async-mqtt": "^2.5.0",
     "shortid": "^2.2.15",
     "rxjs": "^6.5.4",
     "socket.io-client": "^2.3.0",

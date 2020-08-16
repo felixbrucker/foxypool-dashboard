@@ -20,11 +20,11 @@
     </button>
   </div>
   <div style="display: flex;">
-    <input type="text" class="form-control" placeholder="peer id" [(ngModel)]="topic" style="width: 12em;background-color: #2f3136;color: #cfd0d1;">
-    <button class="btn btn-outline-primary" style="margin-left: 10px; width: 8em" *ngIf="topic" (click)="importConfig()">
+    <input type="text" class="form-control" placeholder="share key" [(ngModel)]="shareKey" style="width: 12em;background-color: #2f3136;color: #cfd0d1;">
+    <button class="btn btn-outline-primary" style="margin-left: 10px; width: 8em" *ngIf="shareKey" (click)="importConfig()">
       Import config
     </button>
-    <button class="btn btn-outline-primary" style="margin-left: 10px; width: 8em" *ngIf="!topic" (click)="exportConfig()">
+    <button class="btn btn-outline-primary" style="margin-left: 10px; width: 8em" *ngIf="!shareKey" (click)="exportConfig()">
       Export config
     </button>
   </div>

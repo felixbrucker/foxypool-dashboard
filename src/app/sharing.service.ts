@@ -1,50 +1,31 @@
 import { Injectable } from '@angular/core';
 import { generate as generateShortId } from 'shortid';
-import { connectAsync } from '../../lib/browser-async-mqtt';
+import axios from 'axios';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SharingService {
-  private mqttServer = 'wss://test.mosquitto.org:8081';
 
   constructor() {}
 
-  async shareData(data) {
-    const client = await connectAsync(this.mqttServer);
-    const topic = generateShortId();
-    await client.subscribe(topic);
-    const clientClosedPromise = new Promise((resolve => {
-      client.on('message', async (topic, buf) => {
-        const msg = buf.toString();
-        if (msg !== 'send') {
-          return;
-        }
-        await client.publish(topic, JSON.stringify(data));
-        await client.end();
-        resolve();
-      });
-    }));
-
-    return {topic, clientClosedPromise};
-  }
-
-  async getData(topic) {
-    const client = await connectAsync(this.mqttServer);
-    await client.subscribe(topic);
-    const dataPromise = new Promise((resolve) => {
-      client.on('message', async (topic, buf) => {
-        const msg = buf.toString();
-        if (msg === 'send') {
-          return;
-        }
-        await client.end();
-        resolve(JSON.parse(msg));
-      });
+  async shareData(pools) {
+    const shareKey = generateShortId();
+    await axios.post('/api/export', {
+      shareKey,
+      pools,
     });
 
-    await client.publish(topic, 'send');
+    return shareKey;
+  }
 
-    return dataPromise;
+  async getData(shareKey) {
+    const { data } = await axios.get('/api/import', {
+      params: {
+        shareKey,
+      },
+    });
+
+    return data;
   }
 }

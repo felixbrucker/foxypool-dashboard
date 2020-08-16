@@ -132,6 +132,7 @@ export class PoolsService {
         pool.poolIdentifier = 'burst';
       }
     });
+    this.sortPools(pools);
     this.localStorageService.setItem('configuredPools', JSON.stringify(pools));
   }
 
@@ -166,21 +167,7 @@ export class PoolsService {
       this._pools.filter(pool => !!pool.statsService).forEach(pool => pool.statsService.close());
       const pools = this.poolsAsJSON;
       pools.push(poolToAdd);
-      pools.sort((a, b) => {
-        if (a.group < b.group) {
-          return -1;
-        }
-        if (a.group > b.group) {
-          return 1;
-        }
-        if (a.name < b.name) {
-          return -1;
-        }
-        if (a.name > b.name) {
-          return 1;
-        }
-        return 0;
-      });
+      this.sortPools(pools);
       this.localStorageService.setItem('configuredPools', JSON.stringify(pools));
       this.init();
     }
@@ -192,5 +179,23 @@ export class PoolsService {
       this._pools = this._pools.filter(curr => curr !== pool);
     }
     this.persistPools();
+  }
+
+  sortPools(pools) {
+    pools.sort((a, b) => {
+      if (a.group < b.group) {
+        return -1;
+      }
+      if (a.group > b.group) {
+        return 1;
+      }
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    });
   }
 }

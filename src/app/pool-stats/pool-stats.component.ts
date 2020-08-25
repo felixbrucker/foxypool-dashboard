@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {faSortUp, faSortDown, faTrash, faExclamationTriangle} from '@fortawesome/free-solid-svg-icons';
 import * as Capacity from '../../shared/capacity.es5';
 import {PoolsService} from "../pools.service";
@@ -288,7 +288,7 @@ export class PoolStatsComponent implements OnInit {
 
   getPending(miner) {
     if (typeof miner.pending === 'string') {
-      return miner.pending;
+      return (new BigNumber(miner.pending)).decimalPlaces(8, BigNumber.ROUND_FLOOR).toString();
     }
 
     return miner.pending.toFixed(8);

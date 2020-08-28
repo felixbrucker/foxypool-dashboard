@@ -16,10 +16,12 @@ export class PoolsService {
       group: 'BHD',
       name: 'Foxy-Pool BHD',
       url: 'https://bhd.foxypool.io',
+      poolIdentifier: 'bhd',
     },{
       group: 'BHD',
       name: 'Foxy-Pool BHD ECO',
       url: 'https://bhd-eco.foxypool.io',
+      poolIdentifier: 'bhd-eco',
     },{
       group: 'BHD',
       name: 'Foxy-Pool BHD (Testnet)',
@@ -44,10 +46,12 @@ export class PoolsService {
       group: 'LHD',
       name: 'Foxy-Pool LHD',
       url: 'https://lhd.foxypool.io',
+      poolIdentifier: 'lhd',
     },{
       group: 'XHD',
       name: 'Foxy-Pool XHD',
       url: 'https://xhd.foxypool.io',
+      poolIdentifier: 'xhd',
     },
   ];
 
@@ -136,6 +140,22 @@ export class PoolsService {
       if (pool.url.indexOf('hdd.foxypool.io') !== -1 && !pool.poolIdentifier) {
         pool.url = 'https://hdd.foxypool.io';
         pool.poolIdentifier = 'hdd';
+      }
+      if (pool.url.indexOf('lhd.foxypool.io') !== -1 && !pool.poolIdentifier) {
+        pool.url = 'https://lhd.foxypool.io';
+        pool.poolIdentifier = 'lhd';
+      }
+      if (pool.url.indexOf('xhd.foxypool.io') !== -1 && !pool.poolIdentifier) {
+        pool.url = 'https://xhd.foxypool.io';
+        pool.poolIdentifier = 'xhd';
+      }
+      if (pool.url.indexOf('bhd.foxypool.io') !== -1 && !pool.poolIdentifier) {
+        pool.url = 'https://bhd.foxypool.io';
+        pool.poolIdentifier = 'bhd';
+      }
+      if (pool.url.indexOf('bhd-eco.foxypool.io') !== -1 && !pool.poolIdentifier) {
+        pool.url = 'https://bhd-eco.foxypool.io';
+        pool.poolIdentifier = 'bhd-eco';
       }
     });
     this.sortPools(pools);

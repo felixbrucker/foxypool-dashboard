@@ -8,7 +8,7 @@ export class StatsV2Service {
   private poolIdentifier = [];
 
   constructor() {
-    this.websocketService = new WebsocketService('https://api-v2.foxypool.io:2096/web-ui');
+    this.websocketService = new WebsocketService('https://api.foxypool.io/web-ui');
     this.websocketService.subscribe('connect', this.onConnected.bind(this));
     this.websocketService.subscribe('stats/pool', this.onNewPoolStats.bind(this));
     this.websocketService.subscribe('stats/round', this.onNewRoundStats.bind(this));

@@ -39,6 +39,7 @@ export class PoolsService {
       group: 'HDD',
       name: 'Foxy-Pool HDD',
       url: 'https://hdd.foxypool.io',
+      poolIdentifier: 'hdd',
     },{
       group: 'LHD',
       name: 'Foxy-Pool LHD',
@@ -131,6 +132,10 @@ export class PoolsService {
       if (pool.url.indexOf('burst.foxypool.io') !== -1 && !pool.poolIdentifier) {
         pool.url = 'https://burst.foxypool.io';
         pool.poolIdentifier = 'burst';
+      }
+      if (pool.url.indexOf('hdd.foxypool.io') !== -1 && !pool.poolIdentifier) {
+        pool.url = 'https://hdd.foxypool.io';
+        pool.poolIdentifier = 'hdd';
       }
     });
     this.sortPools(pools);

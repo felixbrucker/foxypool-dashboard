@@ -132,9 +132,11 @@ export class PoolStatsComponent implements OnInit {
   getLastPayoutAmount(pool, payoutAddress) {
     const lastPayout = this.getLastPayout(pool, payoutAddress);
     if (lastPayout.transactions) {
-      return lastPayout.transactions.find(transaction => {
+      const amount = lastPayout.transactions.find(transaction => {
         return Object.keys(transaction.payoutAmounts).some(currentPayoutAddress => currentPayoutAddress === payoutAddress);
       }).payoutAmounts[payoutAddress];
+
+      return (new BigNumber(amount)).decimalPlaces(8, BigNumber.ROUND_FLOOR).toNumber();
     }
 
     return lastPayout.addressAmountPairs[payoutAddress];

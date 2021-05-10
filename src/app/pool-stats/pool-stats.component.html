@@ -14,9 +14,9 @@
       <span (click)="toggleSorting('historicalShare')" ngbTooltip="Historical share">Share <fa-icon
         *ngIf="isSortedColumn('historicalShare')" [icon]="sortingIcon" style="color: #cfd0d1;"></fa-icon></span>
     </th>
-    <th scope="col"><span (click)="toggleSorting('pledge')">Pledged <fa-icon
+    <th scope="col"><span (click)="toggleSorting('pledge')">Pledged / Committed <fa-icon
       *ngIf="isSortedColumn('pledge')" [icon]="sortingIcon" style="color: #cfd0d1;"></fa-icon></span></th>
-    <th scope="col"><span (click)="toggleSorting('historicalPledgeShare')">Pledge Share <fa-icon
+    <th scope="col"><span (click)="toggleSorting('historicalPledgeShare')">Pledge Share / EC Multiplier <fa-icon
       *ngIf="isSortedColumn('historicalPledgeShare')" [icon]="sortingIcon" style="color: #cfd0d1;"></fa-icon></span>
     </th>
     <th scope="col"><span (click)="toggleSorting('deadlineCount')">Deadlines <fa-icon
@@ -76,10 +76,11 @@
       </td>
       <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)">{{getPending(miner)}} {{pool.poolConfig.symbol}}</td>
       <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)">{{((miner.ecShare || miner.historicalShare || 0) * 100).toFixed(4)}}%</td>
-      <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)" *ngIf="pool.poolConfig.supportsPledge">{{getPledge(pool, miner)}} {{getPledgeUnit(pool)}}</td>
-      <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)" *ngIf="!pool.poolConfig.supportsPledge">N/A</td>
+      <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)" *ngIf="pool.poolConfig.supportsPledge || pool.poolConfig.supportsCommitment">{{getPledge(pool, miner)}} {{getPledgeUnit(pool)}}</td>
+      <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)" *ngIf="!pool.poolConfig.supportsPledge && !pool.poolConfig.supportsCommitment">N/A</td>
       <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)" *ngIf="pool.poolConfig.supportsPledge">{{((miner.pledgeShare || miner.historicalPledgeShare || 0) * 100).toFixed(4)}} %</td>
-      <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)" *ngIf="!pool.poolConfig.supportsPledge">N/A</td>
+      <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)" *ngIf="pool.poolConfig.supportsCommitment">{{(miner.pledgeShare || 0).toFixed(2)}}</td>
+      <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)" *ngIf="!pool.poolConfig.supportsPledge && !pool.poolConfig.supportsCommitment">N/A</td>
       <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)">{{miner.deadlines || miner.deadlineCount || 'N/A'}}</td>
       <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)">{{getFormattedCapacity(miner.ec * 1024)}}</td>
       <td (click)="toggleShowDetails(pool.name, miner.payoutAddress)">{{getFormattedCapacityForMiner(miner)}}</td>

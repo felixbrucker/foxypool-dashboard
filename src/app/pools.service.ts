@@ -61,11 +61,7 @@ export class PoolsService {
   }
 
   async init() {
-    const configuredPoolsString = this.localStorageService.getItem('configuredPools');
-    let pools = [];
-    if (configuredPoolsString) {
-      pools = JSON.parse(configuredPoolsString);
-    }
+    const pools = this.getConfiguredPoolsOrEmpty();
     let v1Pools = pools.filter(pool => !pool.poolIdentifier);
     let v2Pools = pools.filter(pool => !!pool.poolIdentifier);
     v1Pools = v1Pools.map(pool => {
@@ -121,11 +117,7 @@ export class PoolsService {
   }
 
   migrateOldConfigs() {
-    const configuredPoolsString = this.localStorageService.getItem('configuredPools');
-    let pools = [];
-    if (configuredPoolsString) {
-      pools = JSON.parse(configuredPoolsString);
-    }
+    const pools = this.getConfiguredPoolsOrEmpty();
     if (pools.length === 0) {
       return;
     }
@@ -160,6 +152,24 @@ export class PoolsService {
     });
     this.sortPools(pools);
     this.localStorageService.setItem('configuredPools', JSON.stringify(pools));
+  }
+
+  getConfiguredPoolsOrEmpty() {
+    const configuredPoolsString = this.localStorageService.getItem('configuredPools');
+    if (!configuredPoolsString) {
+      return [];
+    }
+    let pools = [];
+    try {
+      pools = JSON.parse(configuredPoolsString);
+    } catch (err) {
+      return [];
+    }
+    if (!Array.isArray(pools)) {
+      return [];
+    }
+
+    return pools;
   }
 
   get pools() {

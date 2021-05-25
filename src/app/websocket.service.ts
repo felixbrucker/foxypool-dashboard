@@ -7,6 +7,7 @@ export class WebsocketService {
   constructor(private url: string) {
     this.socket = io(this.url, {
       reconnectionDelayMax: 25 * 1000,
+      transports: ['websocket'],
     });
   }
 

@@ -28,15 +28,15 @@ export class PoolsService {
       url:  'https://bhd-testnet.foxypool.io',
       poolIdentifier: 'bhd-testnet',
     },{
-      group: 'BURST',
-      name: 'Foxy-Pool BURST',
-      url:  'https://burst.foxypool.io',
-      poolIdentifier: 'burst',
+      group: 'SIGNA',
+      name: 'Foxy-Pool SIGNA',
+      url:  'https://signa.foxypool.io',
+      poolIdentifier: 'signa',
     },{
-      group: 'BURST',
-      name: 'Foxy-Pool BURST (Testnet)',
-      url:  'https://burst-testnet.foxypool.io',
-      poolIdentifier: 'burst-testnet',
+      group: 'SIGNA',
+      name: 'Foxy-Pool SIGNA (Testnet)',
+      url:  'https://signa-testnet.foxypool.io',
+      poolIdentifier: 'signa-testnet',
     },{
       group: 'HDD',
       name: 'Foxy-Pool HDD',
@@ -126,8 +126,8 @@ export class PoolsService {
         pool.url = pool.url.replace('.cf', '.io');
       }
       if (pool.url.indexOf('burst.foxypool.io') !== -1 && !pool.poolIdentifier) {
-        pool.url = 'https://burst.foxypool.io';
-        pool.poolIdentifier = 'burst';
+        pool.url = 'https://signa.foxypool.io';
+        pool.poolIdentifier = 'signa';
       }
       if (pool.url.indexOf('hdd.foxypool.io') !== -1 && !pool.poolIdentifier) {
         pool.url = 'https://hdd.foxypool.io';
@@ -148,6 +148,12 @@ export class PoolsService {
       if (pool.url.indexOf('bhd-eco.foxypool.io') !== -1 && !pool.poolIdentifier) {
         pool.url = 'https://bhd-eco.foxypool.io';
         pool.poolIdentifier = 'bhd-eco';
+      }
+      if (pool.url.indexOf('burst.foxypool.io') !== -1 && pool.poolIdentifier === 'burst') {
+        pool.url = 'https://signa.foxypool.io';
+        pool.poolIdentifier = 'signa';
+        pool.group = 'SIGNA';
+        pool.name = 'Foxy-Pool SIGNA';
       }
     });
     this.sortPools(pools);

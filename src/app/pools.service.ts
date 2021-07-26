@@ -18,40 +18,10 @@ export class PoolsService {
       url: 'https://bhd.foxypool.io',
       poolIdentifier: 'bhd',
     },{
-      group: 'BHD',
-      name: 'Foxy-Pool BHD ECO',
-      url: 'https://bhd-eco.foxypool.io',
-      poolIdentifier: 'bhd-eco',
-    },{
-      group: 'BHD',
-      name: 'Foxy-Pool BHD (Testnet)',
-      url:  'https://bhd-testnet.foxypool.io',
-      poolIdentifier: 'bhd-testnet',
-    },{
       group: 'SIGNA',
       name: 'Foxy-Pool SIGNA',
       url:  'https://signa.foxypool.io',
       poolIdentifier: 'signa',
-    },{
-      group: 'SIGNA',
-      name: 'Foxy-Pool SIGNA (Testnet)',
-      url:  'https://signa-testnet.foxypool.io',
-      poolIdentifier: 'signa-testnet',
-    },{
-      group: 'HDD',
-      name: 'Foxy-Pool HDD',
-      url: 'https://hdd.foxypool.io',
-      poolIdentifier: 'hdd',
-    },{
-      group: 'LHD',
-      name: 'Foxy-Pool LHD',
-      url: 'https://lhd.foxypool.io',
-      poolIdentifier: 'lhd',
-    },{
-      group: 'XHD',
-      name: 'Foxy-Pool XHD',
-      url: 'https://xhd.foxypool.io',
-      poolIdentifier: 'xhd',
     },
   ];
 
@@ -129,25 +99,9 @@ export class PoolsService {
         pool.url = 'https://signa.foxypool.io';
         pool.poolIdentifier = 'signa';
       }
-      if (pool.url.indexOf('hdd.foxypool.io') !== -1 && !pool.poolIdentifier) {
-        pool.url = 'https://hdd.foxypool.io';
-        pool.poolIdentifier = 'hdd';
-      }
-      if (pool.url.indexOf('lhd.foxypool.io') !== -1 && !pool.poolIdentifier) {
-        pool.url = 'https://lhd.foxypool.io';
-        pool.poolIdentifier = 'lhd';
-      }
-      if (pool.url.indexOf('xhd.foxypool.io') !== -1 && !pool.poolIdentifier) {
-        pool.url = 'https://xhd.foxypool.io';
-        pool.poolIdentifier = 'xhd';
-      }
       if (pool.url.indexOf('bhd.foxypool.io') !== -1 && !pool.poolIdentifier) {
         pool.url = 'https://bhd.foxypool.io';
         pool.poolIdentifier = 'bhd';
-      }
-      if (pool.url.indexOf('bhd-eco.foxypool.io') !== -1 && !pool.poolIdentifier) {
-        pool.url = 'https://bhd-eco.foxypool.io';
-        pool.poolIdentifier = 'bhd-eco';
       }
       if (pool.url.indexOf('burst.foxypool.io') !== -1 && pool.poolIdentifier === 'burst') {
         pool.url = 'https://signa.foxypool.io';

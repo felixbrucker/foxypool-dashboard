@@ -1,35 +1,22 @@
-import {WebsocketService} from './websocket.service';
 import {BehaviorSubject} from 'rxjs';
+import {ApiService} from './api.service';
 
 export class StatsV2Service {
-
-  private websocketService: WebsocketService;
+  private apiService: ApiService = new ApiService();
   private statsPerPoolIdentifier = {};
   private poolIdentifier = [];
-
-  constructor() {
-    this.websocketService = new WebsocketService('https://api.foxypool.io/web-ui');
-    this.websocketService.subscribe('connect', this.onConnected.bind(this));
-    this.websocketService.subscribe('stats/pool', this.onNewPoolStats.bind(this));
-    this.websocketService.subscribe('stats/round', this.onNewRoundStats.bind(this));
-    this.websocketService.subscribe('stats/live', this.onNewLiveStats.bind(this));
-  }
 
   async setPoolIdentifier(poolIdentifier) {
     this.poolIdentifier = poolIdentifier;
     this.statsPerPoolIdentifier = {};
-    this.poolIdentifier.forEach(poolIdentifier => this.statsPerPoolIdentifier[poolIdentifier] = {
-      poolConfig: new BehaviorSubject<any>({}),
-      poolStats: new BehaviorSubject<any>({}),
-      roundStats: new BehaviorSubject<any>({}),
-      liveStats: new BehaviorSubject<any>({}),
+    this.poolIdentifier.forEach(poolIdentifier => {
+      this.statsPerPoolIdentifier[poolIdentifier] = {
+        poolConfig: new BehaviorSubject<any>({}),
+        poolStats: new BehaviorSubject<any>({}),
+        roundStats: new BehaviorSubject<any>({}),
+      };
     });
-    await this.subscribeToPools();
     this.init();
-  }
-
-  subscribeToPools() {
-    return new Promise(resolve => this.websocketService.publish('subscribe', this.poolIdentifier, resolve));
   }
 
   init() {
@@ -37,17 +24,31 @@ export class StatsV2Service {
       return;
     }
     this.poolIdentifier.forEach(poolIdentifier => {
-      this.websocketService.publish('stats/init', poolIdentifier, ([poolConfig, poolStats, roundStats, liveStats]) => {
-        this.onNewPoolConfig(poolIdentifier, poolConfig);
-        this.onNewPoolStats(poolIdentifier, poolStats);
-        this.onNewRoundStats(poolIdentifier, roundStats);
-        this.onNewLiveStats(poolIdentifier, liveStats);
-      });
+      this.initForPoolIdentifier(poolIdentifier);
+      setInterval(this.updatePoolConfig.bind(this, poolIdentifier), 60 * 60 * 1000);
+      setInterval(this.updatePoolStats.bind(this, poolIdentifier), 31 * 1000);
+      setInterval(this.updateRoundStats.bind(this, poolIdentifier), 31 * 1000);
     });
   }
 
-  onConnected() {
-    this.init();
+  async initForPoolIdentifier(poolIdentifier) {
+    await Promise.all([
+      this.updatePoolConfig(poolIdentifier),
+      this.updatePoolStats(poolIdentifier),
+      this.updateRoundStats(poolIdentifier),
+    ]);
+  }
+
+  async updatePoolConfig(poolIdentifier) {
+    this.onNewPoolConfig(poolIdentifier, await this.apiService.getPoolConfig({ poolIdentifier }));
+  }
+
+  async updatePoolStats(poolIdentifier) {
+    this.onNewPoolStats(poolIdentifier, await this.apiService.getPoolStats({ poolIdentifier }));
+  }
+
+  async updateRoundStats(poolIdentifier) {
+    this.onNewRoundStats(poolIdentifier, await this.apiService.getRoundStats({ poolIdentifier }));
   }
 
   getPoolConfigSubject(poolIdentifier) {
@@ -74,14 +75,6 @@ export class StatsV2Service {
     return stats.roundStats;
   }
 
-  getLiveStatsSubject(poolIdentifier) {
-    const stats = this.statsPerPoolIdentifier[poolIdentifier];
-    if (!stats) {
-      return new BehaviorSubject<any>({});
-    }
-    return stats.liveStats;
-  }
-
   onNewPoolConfig(poolIdentifier, poolConfig) {
     const stats = this.statsPerPoolIdentifier[poolIdentifier];
     if (!stats) {
@@ -104,13 +97,5 @@ export class StatsV2Service {
       return;
     }
     stats.roundStats.next(roundStats);
-  }
-
-  onNewLiveStats(poolIdentifier, liveStats) {
-    const stats = this.statsPerPoolIdentifier[poolIdentifier];
-    if (!stats) {
-      return;
-    }
-    stats.liveStats.next(liveStats);
   }
 }

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {LocalStorageService} from "./local-storage.service";
-import {StatsService} from "./stats.service";
 import {StatsV2Service} from "./stats-v2.service";
 
 @Injectable({
@@ -32,29 +31,7 @@ export class PoolsService {
 
   async init() {
     const pools = this.getConfiguredPoolsOrEmpty();
-    let v1Pools = pools.filter(pool => !pool.poolIdentifier);
     let v2Pools = pools.filter(pool => !!pool.poolIdentifier);
-    v1Pools = v1Pools.map(pool => {
-      const statsService = new StatsService(pool.url);
-
-      const configuredPool = {
-        url: pool.url,
-        name: pool.name,
-        group: pool.group,
-        payoutAddresses: pool.payoutAddresses,
-        poolConfig: statsService.poolConfigSubject.getValue(),
-        poolStats: statsService.poolStatsSubject.getValue(),
-        roundStats: statsService.roundStatsSubject.getValue(),
-        liveStats: statsService.liveStatsSubject.getValue(),
-        statsService,
-      };
-      statsService.poolConfigSubject.asObservable().subscribe((poolConfig => configuredPool.poolConfig = poolConfig));
-      statsService.poolStatsSubject.asObservable().subscribe((poolStats => configuredPool.poolStats = poolStats));
-      statsService.roundStatsSubject.asObservable().subscribe((roundStats => configuredPool.roundStats = roundStats));
-      statsService.liveStatsSubject.asObservable().subscribe((liveStats => configuredPool.liveStats = liveStats));
-
-      return configuredPool;
-    });
     if (v2Pools.length > 0) {
       if (!this.statsV2Service) {
         this.statsV2Service = new StatsV2Service();
@@ -71,19 +48,16 @@ export class PoolsService {
           poolConfig: this.statsV2Service.getPoolConfigSubject(pool.poolIdentifier).getValue(),
           poolStats: this.statsV2Service.getPoolStatsSubject(pool.poolIdentifier).getValue(),
           roundStats: this.statsV2Service.getRoundStatsSubject(pool.poolIdentifier).getValue(),
-          liveStats: this.statsV2Service.getLiveStatsSubject(pool.poolIdentifier).getValue(),
         };
         this.statsV2Service.getPoolConfigSubject(pool.poolIdentifier).asObservable().subscribe((poolConfig => configuredPool.poolConfig = poolConfig));
         this.statsV2Service.getPoolStatsSubject(pool.poolIdentifier).asObservable().subscribe((poolStats => configuredPool.poolStats = poolStats));
         this.statsV2Service.getRoundStatsSubject(pool.poolIdentifier).asObservable().subscribe((roundStats => configuredPool.roundStats = roundStats));
-        this.statsV2Service.getLiveStatsSubject(pool.poolIdentifier).asObservable().subscribe((liveStats => configuredPool.liveStats = liveStats));
 
         return configuredPool;
       });
     }
-    const allPools = v1Pools.concat(v2Pools);
-    this.sortPools(allPools);
-    this._pools = allPools;
+    this.sortPools(v2Pools);
+    this._pools = v2Pools;
   }
 
   migrateOldConfigs() {

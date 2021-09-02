@@ -278,6 +278,9 @@ export class PoolStatsComponent implements OnInit {
     if (!lastSubmitHeight) {
       return account.pledgeShare > 0 ? 3 : 0;
     }
+    if (!pool.roundStats.round) {
+      return 1;
+    }
     if (pool.roundStats.round.height - lastSubmitHeight > 6) {
       return 0;
     }

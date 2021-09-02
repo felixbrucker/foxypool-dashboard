@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {StatsService} from "../stats.service";
 import {PoolsService} from "../pools.service";
 import {SharingService} from "../sharing.service";
 import {LocalStorageService} from "../local-storage.service";

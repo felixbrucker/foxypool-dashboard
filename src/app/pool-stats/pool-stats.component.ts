@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {faSortUp, faSortDown, faTrash, faExclamationTriangle} from '@fortawesome/free-solid-svg-icons';
-import * as Capacity from '../../shared/capacity.es5';
+import Capacity from '../capacity';
 import {PoolsService} from "../pools.service";
 import * as moment from "moment";
 import BigNumber from "bignumber.js";

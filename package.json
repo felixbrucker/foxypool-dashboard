@@ -5,22 +5,22 @@
     "ng": "ng",
     "start": "ng serve --watch",
     "start-no-proxy": "ng serve --watch --disable-host-check",
-    "build": "ng build --optimization=true --prod=true --sourceMap=false",
+    "build": "ng build --optimization=true --configuration production=true --sourceMap=false",
     "build-dev": "ng build",
-    "deploy": "npx vercel --prod",
+    "deploy": "npx vercel --configuration production",
     "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^11.2.14",
-    "@angular/common": "^11.2.14",
-    "@angular/compiler": "^11.2.14",
-    "@angular/core": "^11.2.14",
-    "@angular/forms": "^11.2.14",
-    "@angular/platform-browser": "^11.2.14",
-    "@angular/platform-browser-dynamic": "^11.2.14",
-    "@angular/router": "^11.2.14",
-    "@angular/service-worker": "^11.2.14",
+    "@angular/animations": "^12.2.10",
+    "@angular/common": "^12.2.10",
+    "@angular/compiler": "^12.2.10",
+    "@angular/core": "^12.2.10",
+    "@angular/forms": "^12.2.10",
+    "@angular/platform-browser": "^12.2.10",
+    "@angular/platform-browser-dynamic": "^12.2.10",
+    "@angular/router": "^12.2.10",
+    "@angular/service-worker": "^12.2.10",
     "@fortawesome/angular-fontawesome": "^0.9.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
@@ -36,18 +36,18 @@
     "rxjs": "^6.6.7",
     "shortid": "^2.2.16",
     "tslib": "^2.0.0",
-    "zone.js": "~0.10.2"
+    "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.1102.14",
-    "@angular/cli": "^11.2.14",
-    "@angular/compiler-cli": "^11.2.14",
-    "@angular/language-service": "^11.2.14",
+    "@angular-devkit/build-angular": "~12.2.10",
+    "@angular/cli": "^12.2.10",
+    "@angular/compiler-cli": "^12.2.10",
+    "@angular/language-service": "^12.2.10",
     "@juggle/resize-observer": "^3.3.1",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
     "ts-node": "^8.6.2",
     "tslint": "~6.1.0",
-    "typescript": "~4.0.8"
+    "typescript": "~4.3.5"
   }
 }

@@ -1,16 +1,16 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {faSortUp, faSortDown, faTrash, faExclamationTriangle} from '@fortawesome/free-solid-svg-icons';
 import Capacity from '../capacity';
-import {PoolsService} from "../pools.service";
-import * as moment from "moment";
-import BigNumber from "bignumber.js";
+import {PoolsService} from '../pools.service';
+import * as moment from 'moment';
+import BigNumber from 'bignumber.js';
 
 @Component({
   selector: 'app-pool-stats',
   templateUrl: './pool-stats.component.html',
   styleUrls: ['./pool-stats.component.scss']
 })
-export class PoolStatsComponent implements OnInit {
+export class PoolStatsComponent  {
 
   private showDetails: any = {};
   private _sortingIcon = null;
@@ -20,9 +20,6 @@ export class PoolStatsComponent implements OnInit {
   public faExclamationTriangle = faExclamationTriangle;
 
   constructor(private poolsService: PoolsService) { }
-
-  ngOnInit() {
-  }
 
   get pools() {
     return this.poolsService.pools;

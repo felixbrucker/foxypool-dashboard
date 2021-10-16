@@ -2,7 +2,7 @@ import axios, {AxiosInstance} from 'axios';
 
 export class ApiService {
   private client: AxiosInstance = axios.create({
-    baseURL: `https://api.foxypool.io/api/stats`,
+    baseURL: 'https://api.foxypool.io/api/stats',
   });
 
   async getPoolConfig({ poolIdentifier }) {

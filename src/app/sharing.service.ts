@@ -6,9 +6,6 @@ import axios from 'axios';
   providedIn: 'root',
 })
 export class SharingService {
-
-  constructor() {}
-
   async shareData(pools) {
     const shareKey = generateShortId();
     await axios.post('/api/export', {

@@ -1,14 +1,14 @@
-import {Component, OnInit} from '@angular/core';
-import {PoolsService} from "../pools.service";
-import {SharingService} from "../sharing.service";
-import {LocalStorageService} from "../local-storage.service";
+import {Component} from '@angular/core';
+import {PoolsService} from '../pools.service';
+import {SharingService} from '../sharing.service';
+import {LocalStorageService} from '../local-storage.service';
 
 @Component({
   selector: 'app-add-new-pool',
   templateUrl: './add-new-pool.component.html',
   styleUrls: ['./add-new-pool.component.scss']
 })
-export class AddNewPoolComponent implements OnInit {
+export class AddNewPoolComponent  {
 
   public selectedPool = null;
   private _shareKey;
@@ -17,9 +17,7 @@ export class AddNewPoolComponent implements OnInit {
     private poolsService: PoolsService,
     private sharingService: SharingService,
     private localStorageService: LocalStorageService,
-  ) { }
-
-  ngOnInit() {}
+  ) {}
 
   get availablePools() {
     return this.poolsService.availablePools;

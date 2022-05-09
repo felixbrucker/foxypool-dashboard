@@ -7,7 +7,7 @@
     "start-no-proxy": "ng serve --watch --disable-host-check",
     "build": "ng build --configuration production --sourceMap=false",
     "build-dev": "ng build",
-    "deploy": "npx vercel --configuration production",
+    "deploy": "npx vercel --prod",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix"
   },

@@ -31,7 +31,7 @@
     "bootstrap": "^4.6.0",
     "core-js": "^3.6.4",
     "echarts": "^5.2.1",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "mongoose": "^6.10.0",
     "ngx-echarts": "^7.0.2",
     "rxjs": "^6.6.7",

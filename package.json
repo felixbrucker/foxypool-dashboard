@@ -32,7 +32,7 @@
     "core-js": "^3.6.4",
     "echarts": "^5.2.1",
     "moment": "^2.29.1",
-    "mongoose": "^6.0.11",
+    "mongoose": "^6.10.0",
     "ngx-echarts": "^7.0.2",
     "rxjs": "^6.6.7",
     "shortid": "^2.2.16",
